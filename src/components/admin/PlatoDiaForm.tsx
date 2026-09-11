@@ -1,13 +1,16 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { ImagePlus, Save } from 'lucide-react'
+import { compressImage } from '@/lib/compress-image'
+import RichTextEditor from '@/components/admin/RichTextEditor'
+import { useAdminForm } from '@/components/admin/AdminFormContext'
 import Image from 'next/image'
 
 interface PlatoDia {
@@ -20,45 +23,44 @@ interface PlatoDia {
 
 export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }) {
   const router = useRouter()
-  const [nombre, setNombre] = useState(platoDia?.nombre ?? '')
-  const [descripcion, setDescripcion] = useState(platoDia?.descripcion ?? '')
-  const [precio, setPrecio] = useState(platoDia?.precio?.toString() ?? '')
-  const [imagen, setImagen] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(platoDia?.imagen_url ?? null)
+  const { platoDia: form, setPlatoDia } = useAdminForm()
   const [loading, setLoading] = useState(false)
-  const [mensaje, setMensaje] = useState('')
+  const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null)
+
+  // Inicializar con datos de la DB si el form está vacío
+  const nombre = form.nombre || platoDia?.nombre || ''
+  const descripcion = form.descripcion || platoDia?.descripcion || ''
+  const precio = form.precio || platoDia?.precio?.toString() || ''
+  const preview = form.preview ?? platoDia?.imagen_url ?? null
 
   function handleImagen(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    setImagen(file)
-    setPreview(URL.createObjectURL(file))
+    setPlatoDia({ imagen: file, preview: URL.createObjectURL(file) })
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    setMensaje('')
+    setMensaje(null)
 
     const supabase = createClient()
     let imagen_url = platoDia?.imagen_url ?? null
 
-    if (imagen) {
-      const ext = imagen.name.split('.').pop()
-      const path = `plato-dia/actual.${ext}`
+    if (form.imagen) {
+      const compressed = await compressImage(form.imagen)
+      const path = `plato-dia/actual.webp`
       const { error: uploadError } = await supabase.storage
         .from('imagenes')
-        .upload(path, imagen, { upsert: true })
+        .upload(path, compressed, { upsert: true, contentType: 'image/webp' })
 
       if (uploadError) {
-        setMensaje('Error al subir la imagen')
+        setMensaje({ tipo: 'error', texto: 'Error al subir la imagen' })
         setLoading(false)
         return
       }
 
-      const { data: urlData } = supabase.storage
-        .from('imagenes')
-        .getPublicUrl(path)
+      const { data: urlData } = supabase.storage.from('imagenes').getPublicUrl(path)
       imagen_url = urlData.publicUrl
     }
 
@@ -74,9 +76,9 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
       : await supabase.from('plato_dia').insert(payload)
 
     if (error) {
-      setMensaje('Error al guardar')
+      setMensaje({ tipo: 'error', texto: 'Error al guardar' })
     } else {
-      setMensaje('Guardado correctamente')
+      setMensaje({ tipo: 'ok', texto: 'Guardado correctamente' })
       router.refresh()
     }
     setLoading(false)
@@ -84,64 +86,71 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
 
   return (
     <Card>
-      <CardContent className="p-5">
+      <CardHeader>
+        <CardTitle className="text-base">Plato del día</CardTitle>
+        <CardDescription>Este plato aparecerá destacado en tu página principal.</CardDescription>
+      </CardHeader>
+      <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <Label htmlFor="nombre">Nombre del plato</Label>
-            <Input
-              id="nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-              placeholder="Ej: Lomo Saltado"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="nombre">Nombre del plato</Label>
+              <Input
+                id="nombre"
+                value={nombre}
+                onChange={(e) => setPlatoDia({ nombre: e.target.value })}
+                required
+                placeholder="Ej: Lomo Saltado"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="precio">Precio ($)</Label>
+              <Input
+                id="precio"
+                type="number"
+                value={precio}
+                onChange={(e) => setPlatoDia({ precio: e.target.value })}
+                placeholder="Ej: 2500"
+                step="0.01"
+              />
+            </div>
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="descripcion">Descripcion</Label>
-            <Textarea
-              id="descripcion"
+
+          <div className="space-y-1.5">
+            <Label>Descripción</Label>
+            <RichTextEditor
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              placeholder="Descripcion del plato..."
-              rows={3}
+              onChange={(v) => setPlatoDia({ descripcion: v })}
+              placeholder="Describí el plato: ingredientes, acompañamientos..."
             />
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="precio">Precio ($)</Label>
-            <Input
-              id="precio"
-              type="number"
-              value={precio}
-              onChange={(e) => setPrecio(e.target.value)}
-              placeholder="Ej: 2500"
-              step="0.01"
-            />
-          </div>
-          <div className="space-y-1">
+
+          <div className="space-y-1.5">
             <Label htmlFor="imagen">Foto del plato</Label>
-            <Input
-              id="imagen"
-              type="file"
-              accept="image/*"
-              onChange={handleImagen}
-            />
+            <label
+              htmlFor="imagen"
+              className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-500"
+            >
+              <ImagePlus size={18} className="text-gray-400" />
+              {form.imagen ? form.imagen.name : 'Elegir imagen...'}
+            </label>
+            <Input id="imagen" type="file" accept="image/*" onChange={handleImagen} className="hidden" />
             {preview && (
-              <div className="relative w-full h-40 mt-2 rounded overflow-hidden">
+              <div className="relative w-full h-44 mt-2 rounded-lg overflow-hidden">
                 <Image src={preview} alt="Preview" fill className="object-cover" />
               </div>
             )}
           </div>
+
           {mensaje && (
-            <p className={`text-sm ${mensaje.includes('Error') ? 'text-red-600' : 'text-green-600'}`}>
-              {mensaje}
+            <p className={`text-sm px-3 py-2 rounded-md ${mensaje.tipo === 'error' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
+              {mensaje.texto}
             </p>
           )}
-          <Button
-            type="submit"
-            className="bg-red-700 hover:bg-red-800 text-white"
-            disabled={loading}
-          >
-            {loading ? 'Guardando...' : 'Guardar plato del dia'}
+
+          <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+            <Save size={16} />
+            {loading ? 'Guardando...' : 'Guardar plato del día'}
           </Button>
         </form>
       </CardContent>
