@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { ImagePlus, Save } from 'lucide-react'
+import { ImagePlus, Save, Trash2 } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
@@ -25,6 +25,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   const router = useRouter()
   const { platoDia: form, setPlatoDia } = useAdminForm()
   const [loading, setLoading] = useState(false)
+  const [eliminando, setEliminando] = useState(false)
   const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null)
 
   // Inicializar con datos de la DB si el form está vacío
@@ -32,6 +33,16 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   const descripcion = form.descripcion || platoDia?.descripcion || ''
   const precio = form.precio || platoDia?.precio?.toString() || ''
   const preview = form.preview ?? platoDia?.imagen_url ?? null
+
+  async function handleEliminar() {
+    if (!platoDia) return
+    setEliminando(true)
+    const supabase = createClient()
+    await supabase.from('plato_dia').delete().eq('id', platoDia.id)
+    setPlatoDia({ nombre: '', descripcion: '', precio: '', imagen: null, preview: null })
+    router.refresh()
+    setEliminando(false)
+  }
 
   function handleImagen(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -148,10 +159,24 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
             </p>
           )}
 
-          <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
-            <Save size={16} />
-            {loading ? 'Guardando...' : 'Guardar plato del día'}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+              <Save size={16} />
+              {loading ? 'Guardando...' : 'Guardar plato del día'}
+            </Button>
+            {platoDia && (
+              <Button
+                type="button"
+                variant="outline"
+                className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                onClick={handleEliminar}
+                disabled={eliminando}
+              >
+                <Trash2 size={15} />
+                {eliminando ? 'Eliminando...' : 'Eliminar plato'}
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>

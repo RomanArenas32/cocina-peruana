@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UtensilsCrossed, Tag } from 'lucide-react'
+import { UtensilsCrossed, Tag, BookOpen } from 'lucide-react'
 
 const links = [
   { href: '/admin', label: 'Plato del día', icon: UtensilsCrossed },
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },
+  { href: '/admin/carta', label: 'Mi carta', icon: BookOpen },
 ]
 
 export default function Sidebar() {
