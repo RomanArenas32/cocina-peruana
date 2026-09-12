@@ -6,11 +6,11 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ImagePlus, PlusCircle, CalendarDays } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
 
 export default function PromocionForm() {
@@ -88,13 +88,11 @@ export default function PromocionForm() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="desc">Descripción</Label>
-            <Textarea
-              id="desc"
+            <Label>Descripción</Label>
+            <RichTextEditor
               value={form.descripcion}
-              onChange={(e) => setPromocion({ descripcion: e.target.value })}
+              onChange={(v) => setPromocion({ descripcion: v })}
               placeholder="Detalle de la promoción..."
-              rows={3}
             />
           </div>
 

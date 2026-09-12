@@ -6,10 +6,10 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ImagePlus, PlusCircle } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
 
 export default function CartaPlatoForm() {
@@ -108,13 +108,11 @@ export default function CartaPlatoForm() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="desc-carta">Descripción</Label>
-            <Textarea
-              id="desc-carta"
+            <Label>Descripción</Label>
+            <RichTextEditor
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
+              onChange={setDescripcion}
               placeholder="Ingredientes, acompañamientos..."
-              rows={2}
             />
           </div>
 
