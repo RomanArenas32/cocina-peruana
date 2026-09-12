@@ -139,7 +139,7 @@ export default function CartaPlatoForm() {
             </p>
           )}
 
-          <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+          <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2 hover:cursor-pointer" disabled={loading}>
             <PlusCircle size={16} />
             {loading ? 'Guardando...' : 'Agregar a la carta'}
           </Button>

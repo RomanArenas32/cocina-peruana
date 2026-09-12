@@ -71,7 +71,7 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
             <CardContent className="p-0 flex items-stretch">
               {promo.imagen_url && (
                 <div className="relative w-24 shrink-0">
-                  <Image src={promo.imagen_url} alt={promo.titulo} fill className="object-cover" />
+                  <Image src={promo.imagen_url} alt={promo.titulo} fill sizes="96px" className="object-cover" />
                 </div>
               )}
               <div className="flex-1 min-w-0 p-4 flex flex-col justify-between gap-2">

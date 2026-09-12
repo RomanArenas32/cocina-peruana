@@ -35,7 +35,7 @@ export default async function Home() {
       <section className="bg-red-700 text-white pb-14 pt-12 px-4 text-center">
         {/* Logo con banderas */}
         <div className="flex justify-center items-center gap-6 mb-6">
-          <Image src="https://flagcdn.com/w80/pe.png" alt="Perú" width={56} height={38} className="rounded-md shadow-md" style={{ height: 'auto' }} />
+          <Image src="https://flagcdn.com/w80/pe.png" alt="Perú" width={56} height={38} className="rounded-md shadow-md" style={{ width: '56px', height: 'auto' }} />
           <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-xl">
             <Image
               src="/logo.jpeg"
@@ -46,7 +46,7 @@ export default async function Home() {
               priority
             />
           </div>
-          <Image src="https://flagcdn.com/w80/ar.png" alt="Argentina" width={56} height={38} className="rounded-md shadow-md" style={{ height: 'auto' }} />
+          <Image src="https://flagcdn.com/w80/ar.png" alt="Argentina" width={56} height={38} className="rounded-md shadow-md" style={{ width: '56px', height: 'auto' }} />
         </div>
 
         <h1 className="text-5xl font-bold tracking-tight">Sabores del Perú</h1>
@@ -148,7 +148,7 @@ export default async function Home() {
               <h2 className="text-2xl font-bold text-red-700">Promociones</h2>
             </div>
             <div className="space-y-4">
-              {promociones.map((promo) => (
+              {promociones.map((promo, i) => (
                 <Card key={promo.id} className="overflow-hidden shadow-lg border-0">
                   {promo.imagen_url && (
                     <div className="relative w-full h-48">
@@ -158,6 +158,7 @@ export default async function Home() {
                         fill
                         sizes="(max-width: 672px) 100vw, 672px"
                         className="object-cover"
+                        priority={i === 0}
                       />
                     </div>
                   )}
