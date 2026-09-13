@@ -5,7 +5,25 @@ import Image from 'next/image'
 
 export const revalidate = 60
 
-const WHATSAPP_NUMBER = '51977695657'
+function WhatsAppButton({ number, message, label }: { number: string; message: string; label: string }) {
+  const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2.5 px-5 rounded-full transition-colors"
+    >
+      <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.859L.057 23.428a.75.75 0 00.916.916l5.569-1.475A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.692-.502-5.23-1.378l-.374-.216-3.875 1.026 1.026-3.875-.216-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+      </svg>
+      {label}
+    </a>
+  )
+}
+
+const WHATSAPP_NUMBER = '542281595327'
 const INSTAGRAM_URL = 'https://www.instagram.com/cocina.peruana.azul/'
 
 export default async function Home() {
@@ -118,22 +136,15 @@ export default async function Home() {
                     dangerouslySetInnerHTML={{ __html: platoDia.descripcion }}
                   />
                 )}
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center justify-between mt-4 gap-3 flex-wrap">
                   {platoDia.precio && (
                     <p className="text-2xl font-bold text-red-700">${platoDia.precio}</p>
                   )}
-                  <a
-                    href={`${whatsappUrl}%20-%20${encodeURIComponent(platoDia.nombre)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-full transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.859L.057 23.428a.75.75 0 00.916.916l5.569-1.475A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.692-.502-5.23-1.378l-.374-.216-3.875 1.026 1.026-3.875-.216-.374A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                    </svg>
-                    Pedir ahora
-                  </a>
+                  <WhatsAppButton
+                    number={WHATSAPP_NUMBER}
+                    message={`Hola! Quiero pedir el plato del día: *${platoDia.nombre}* 🍽️`}
+                    label="Pedir ahora"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -168,8 +179,18 @@ export default async function Home() {
                       <Badge className="bg-amber-500 text-white shrink-0">Promo</Badge>
                     </div>
                     {promo.descripcion && (
-                      <p className="text-gray-600 mt-2 text-sm leading-relaxed">{promo.descripcion}</p>
+                      <div
+                        className="rich-content text-gray-600 mt-2 text-sm"
+                        dangerouslySetInnerHTML={{ __html: promo.descripcion }}
+                      />
                     )}
+                    <div className="mt-4">
+                      <WhatsAppButton
+                        number={WHATSAPP_NUMBER}
+                        message={`Hola! Me interesa la promoción: *${promo.titulo}* 🔥`}
+                        label="Consultar promoción"
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               ))}
