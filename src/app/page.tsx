@@ -23,7 +23,7 @@ function WhatsAppButton({ number, message, label }: { number: string; message: s
   )
 }
 
-const WHATSAPP_NUMBER = '5492281595327'
+const WHATSAPP_NUMBER = '5492281494327'
 const INSTAGRAM_URL = 'https://www.instagram.com/cocina.peruana.azul/'
 
 export default async function Home() {
