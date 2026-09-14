@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Pause, Play, Trash2, CalendarPlus } from 'lucide-react'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 interface Promocion {
   id: string
@@ -34,22 +35,37 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
 
   async function toggleActiva(id: string, activa: boolean) {
     const supabase = createClient()
-    await supabase.from('promociones').update({ activa: !activa }).eq('id', id)
+    const { error } = await supabase.from('promociones').update({ activa: !activa }).eq('id', id)
+    if (error) {
+      toast.error('Error al actualizar la promoción')
+    } else {
+      toast.success(activa ? 'Promoción pausada' : 'Promoción activada')
+    }
     router.refresh()
   }
 
   async function eliminar(id: string) {
     const supabase = createClient()
-    await supabase.from('promociones').delete().eq('id', id)
+    const { error } = await supabase.from('promociones').delete().eq('id', id)
+    if (error) {
+      toast.error('Error al eliminar la promoción')
+    } else {
+      toast.success('Promoción eliminada')
+    }
     router.refresh()
   }
 
   async function extenderFecha(id: string) {
     if (!nuevaFecha) return
     const supabase = createClient()
-    await supabase.from('promociones').update({ fecha_expiracion: nuevaFecha }).eq('id', id)
-    setExtendiendo(null)
-    setNuevaFecha('')
+    const { error } = await supabase.from('promociones').update({ fecha_expiracion: nuevaFecha }).eq('id', id)
+    if (error) {
+      toast.error('Error al actualizar la fecha')
+    } else {
+      toast.success('Fecha actualizada')
+      setExtendiendo(null)
+      setNuevaFecha('')
+    }
     router.refresh()
   }
 

@@ -2,6 +2,7 @@ import Image from 'next/image'
 import LogoutButton from '@/components/admin/LogoutButton'
 import Sidebar from '@/components/admin/Sidebar'
 import { AdminFormProvider } from '@/components/admin/AdminFormContext'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,6 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </main>
       </div>
     </div>
+    <Toaster richColors position="top-right" />
     </AdminFormProvider>
   )
 }

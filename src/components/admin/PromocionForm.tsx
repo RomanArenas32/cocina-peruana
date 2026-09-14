@@ -12,12 +12,12 @@ import { compressImage } from '@/lib/compress-image'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 export default function PromocionForm() {
   const router = useRouter()
   const { promocion: form, setPromocion, resetPromocion } = useAdminForm()
   const [loading, setLoading] = useState(false)
-  const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null)
 
   function handleImagen(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -28,10 +28,9 @@ export default function PromocionForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    setMensaje(null)
 
     const supabase = createClient()
-    let imagen_url: string | null = null
+    let imagen_url: string | null = form.preview?.startsWith('http') ? form.preview : null
 
     if (form.imagen) {
       const compressed = await compressImage(form.imagen)
@@ -41,7 +40,7 @@ export default function PromocionForm() {
         .upload(path, compressed, { contentType: 'image/webp' })
 
       if (uploadError) {
-        setMensaje({ tipo: 'error', texto: 'Error al subir la imagen' })
+        toast.error('Error al subir la imagen')
         setLoading(false)
         return
       }
@@ -59,9 +58,9 @@ export default function PromocionForm() {
     })
 
     if (error) {
-      setMensaje({ tipo: 'error', texto: 'Error al crear la promoción' })
+      toast.error('Error al crear la promoción')
     } else {
-      setMensaje({ tipo: 'ok', texto: 'Promoción publicada' })
+      toast.success('Promoción publicada')
       resetPromocion()
       router.refresh()
     }
@@ -126,12 +125,6 @@ export default function PromocionForm() {
               </div>
             )}
           </div>
-
-          {mensaje && (
-            <p className={`text-sm px-3 py-2 rounded-md ${mensaje.tipo === 'error' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
-              {mensaje.texto}
-            </p>
-          )}
 
           <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
             <PlusCircle size={16} />

@@ -12,6 +12,7 @@ import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 interface PlatoDia {
   id: string
@@ -26,7 +27,6 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   const { platoDia: form, setPlatoDia } = useAdminForm()
   const [loading, setLoading] = useState(false)
   const [eliminando, setEliminando] = useState(false)
-  const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null)
 
   // Inicializar con datos de la DB si el form está vacío
   const nombre = form.nombre || platoDia?.nombre || ''
@@ -38,9 +38,14 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
     if (!platoDia) return
     setEliminando(true)
     const supabase = createClient()
-    await supabase.from('plato_dia').delete().eq('id', platoDia.id)
-    setPlatoDia({ nombre: '', descripcion: '', precio: '', imagen: null, preview: null })
-    router.refresh()
+    const { error } = await supabase.from('plato_dia').delete().eq('id', platoDia.id)
+    if (error) {
+      toast.error('Error al eliminar el plato')
+    } else {
+      toast.success('Plato del día eliminado')
+      setPlatoDia({ nombre: '', descripcion: '', precio: '', imagen: null, preview: null })
+      router.refresh()
+    }
     setEliminando(false)
   }
 
@@ -53,10 +58,9 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    setMensaje(null)
 
     const supabase = createClient()
-    let imagen_url = platoDia?.imagen_url ?? null
+    let imagen_url = platoDia?.imagen_url ?? (form.preview?.startsWith('http') ? form.preview : null)
 
     if (form.imagen) {
       const compressed = await compressImage(form.imagen)
@@ -66,7 +70,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
         .upload(path, compressed, { upsert: true, contentType: 'image/webp' })
 
       if (uploadError) {
-        setMensaje({ tipo: 'error', texto: 'Error al subir la imagen' })
+        toast.error('Error al subir la imagen')
         setLoading(false)
         return
       }
@@ -87,9 +91,9 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
       : await supabase.from('plato_dia').insert(payload)
 
     if (error) {
-      setMensaje({ tipo: 'error', texto: 'Error al guardar' })
+      toast.error('Error al guardar el plato del día')
     } else {
-      setMensaje({ tipo: 'ok', texto: 'Guardado correctamente' })
+      toast.success('Plato del día guardado')
       router.refresh()
     }
     setLoading(false)
@@ -152,12 +156,6 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
               </div>
             )}
           </div>
-
-          {mensaje && (
-            <p className={`text-sm px-3 py-2 rounded-md ${mensaje.tipo === 'error' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
-              {mensaje.texto}
-            </p>
-          )}
 
           <div className="flex items-center gap-3">
             <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
