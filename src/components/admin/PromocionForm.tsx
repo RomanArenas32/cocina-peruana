@@ -97,7 +97,7 @@ export default function PromocionForm() {
 
           <div className="space-y-1.5">
             <Label htmlFor="expiracion" className="flex items-center gap-1.5">
-              <CalendarDays size={14} className="text-gray-400" />
+              <CalendarDays size={14} className="text-muted-foreground" />
               Fecha de expiración (opcional)
             </Label>
             <Input
@@ -113,9 +113,9 @@ export default function PromocionForm() {
             <Label htmlFor="img-promo">Imagen (opcional)</Label>
             <label
               htmlFor="img-promo"
-              className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-500"
+              className="flex items-center gap-2 border border-dashed border-accent/30 rounded-lg px-4 py-3 cursor-pointer hover:bg-accent/5 transition-colors text-sm text-muted-foreground"
             >
-              <ImagePlus size={18} className="text-gray-400" />
+              <ImagePlus size={18} className="text-muted-foreground" />
               {form.imagen ? form.imagen.name : 'Elegir imagen...'}
             </label>
             <Input id="img-promo" type="file" accept="image/*" onChange={handleImagen} className="hidden" />
@@ -126,7 +126,7 @@ export default function PromocionForm() {
             )}
           </div>
 
-          <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+          <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2" disabled={loading}>
             <PlusCircle size={16} />
             {loading ? 'Publicando...' : 'Publicar promoción'}
           </Button>

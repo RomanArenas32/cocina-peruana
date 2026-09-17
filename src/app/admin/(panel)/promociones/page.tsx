@@ -13,12 +13,12 @@ export default async function PromocionesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Promociones</h1>
-        <p className="text-gray-500 text-sm mt-1">Creá y gestioná tus promociones activas.</p>
+        <h1 className="text-2xl font-bold text-foreground font-heading">Promociones</h1>
+        <p className="text-muted-foreground text-sm mt-1">Creá y gestioná tus promociones activas.</p>
       </div>
       <PromocionForm />
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Promociones cargadas</h2>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Promociones cargadas</h2>
         <PromocionList promociones={promociones ?? []} />
       </div>
     </div>

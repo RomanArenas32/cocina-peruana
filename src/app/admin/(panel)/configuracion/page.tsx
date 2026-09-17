@@ -13,8 +13,8 @@ export default async function ConfiguracionPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Configuración</h1>
-        <p className="text-gray-500 text-sm mt-1">Información del negocio que aparece en tu web.</p>
+        <h1 className="text-2xl font-bold text-foreground font-heading">Configuración</h1>
+        <p className="text-muted-foreground text-sm mt-1">Información del negocio que aparece en tu web.</p>
       </div>
       <ConfigForm config={config} />
     </div>

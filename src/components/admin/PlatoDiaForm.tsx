@@ -144,9 +144,9 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
             <Label htmlFor="imagen">Foto del plato</Label>
             <label
               htmlFor="imagen"
-              className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-500"
+              className="flex items-center gap-2 border border-dashed border-accent/30 rounded-lg px-4 py-3 cursor-pointer hover:bg-accent/5 transition-colors text-sm text-muted-foreground"
             >
-              <ImagePlus size={18} className="text-gray-400" />
+              <ImagePlus size={18} className="text-muted-foreground" />
               {form.imagen ? form.imagen.name : 'Elegir imagen...'}
             </label>
             <Input id="imagen" type="file" accept="image/*" onChange={handleImagen} className="hidden" />
@@ -158,7 +158,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
           </div>
 
           <div className="flex items-center gap-3">
-            <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+            <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2" disabled={loading}>
               <Save size={16} />
               {loading ? 'Guardando...' : 'Guardar plato del día'}
             </Button>
@@ -166,7 +166,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
               <Button
                 type="button"
                 variant="outline"
-                className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                className="gap-2 text-primary border-primary/20 hover:bg-primary/5"
                 onClick={handleEliminar}
                 disabled={eliminando}
               >

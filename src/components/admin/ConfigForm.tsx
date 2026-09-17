@@ -93,7 +93,7 @@ export default function ConfigForm({ config }: { config: Config | null }) {
               <p className="text-xs text-gray-400">Aparece en el hero de la web. Si está vacío se usa el texto por defecto.</p>
             </div>
 
-            <Button type="submit" className="bg-red-700 hover:bg-red-800 text-white gap-2" disabled={loading}>
+            <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2" disabled={loading}>
               <Save size={16} />
               {loading ? 'Guardando...' : 'Guardar configuración'}
             </Button>

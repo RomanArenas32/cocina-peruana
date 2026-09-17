@@ -14,8 +14,8 @@ export default async function AdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Plato del día</h1>
-        <p className="text-gray-500 text-sm mt-1">Este plato aparecerá destacado en tu página principal.</p>
+        <h1 className="text-2xl font-bold text-foreground font-heading">Plato del día</h1>
+        <p className="text-muted-foreground text-sm mt-1">Este plato aparecerá destacado en tu página principal.</p>
       </div>
       <PlatoDiaForm platoDia={platoDia} />
     </div>

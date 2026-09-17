@@ -13,8 +13,8 @@ export default async function CartaPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Mi carta</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-foreground font-heading">Mi carta</h1>
+        <p className="text-muted-foreground text-sm mt-1">
           Guardá tus platos acá. No se muestran en la web — los usás para armar el plato del día y promociones rápidamente.
         </p>
       </div>
@@ -22,7 +22,7 @@ export default async function CartaPage() {
       <CartaPlatoForm />
 
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
           Platos guardados ({platos?.length ?? 0})
         </h2>
         <CartaList platos={platos ?? []} />

@@ -19,7 +19,7 @@ export default function LogoutButton() {
       onClick={handleLogout}
       variant="outline"
       size="sm"
-      className="text-white border-white hover:bg-red-800 hover:text-white bg-transparent hover:cursor-pointer"
+      className="text-primary-foreground border-primary-foreground/30 hover:bg-primary/80 hover:text-primary-foreground bg-transparent hover:cursor-pointer"
     >
       Salir
     </Button>

@@ -71,7 +71,7 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
 
   if (promociones.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400 border border-dashed rounded-lg">
+      <div className="text-center py-8 text-muted-foreground border border-dashed border-border rounded-lg">
         <p className="text-sm">No hay promociones cargadas todavía.</p>
       </div>
     )
@@ -94,23 +94,23 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-semibold text-sm">{promo.titulo}</h3>
-                    <Badge className={promo.activa ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-600'}>
+                    <Badge className={promo.activa ? 'bg-accent/15 text-foreground border border-accent/40' : 'bg-muted text-muted-foreground border border-border'}>
                       {promo.activa ? 'Activa' : 'Pausada'}
                     </Badge>
                     {estado === 'expirada' && (
-                      <Badge className="bg-red-100 text-red-700 border border-red-200">Expirada</Badge>
+                      <Badge className="bg-primary/10 text-primary border border-primary/20">Expirada</Badge>
                     )}
                     {estado === 'vence-hoy' && (
-                      <Badge className="bg-amber-100 text-amber-700 border border-amber-200">Vence hoy</Badge>
+                      <Badge className="bg-accent/15 text-foreground border border-accent/30">Vence hoy</Badge>
                     )}
                   </div>
 
                   {promo.descripcion && (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{promo.descripcion}</p>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{promo.descripcion}</p>
                   )}
 
                   {promo.fecha_expiracion && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       Expira: {new Date(promo.fecha_expiracion + 'T12:00:00').toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                   )}
@@ -143,7 +143,7 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
                   <Button
                     size="sm"
                     variant="outline"
-                    className="gap-1.5 text-xs text-red-600 border-red-200 hover:bg-red-50"
+                    className="gap-1.5 text-xs text-primary border-primary/20 hover:bg-primary/5"
                     onClick={() => eliminar(promo.id)}
                   >
                     <Trash2 size={13} />
@@ -162,7 +162,7 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
                     />
                     <Button
                       size="sm"
-                      className="bg-red-700 hover:bg-red-800 text-white text-xs h-8"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-8"
                       onClick={() => extenderFecha(promo.id)}
                       disabled={!nuevaFecha}
                     >

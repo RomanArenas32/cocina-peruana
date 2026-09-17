@@ -7,16 +7,16 @@ import { Toaster } from '@/components/ui/sonner'
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AdminFormProvider>
-    <div className="h-dvh overflow-hidden flex flex-col bg-gray-50">
+    <div className="h-dvh overflow-hidden flex flex-col bg-muted">
       {/* Header */}
-      <header className="bg-red-700 text-white px-6 py-3 flex items-center justify-between shadow-md shrink-0">
+      <header className="bg-primary text-primary-foreground px-6 py-3 flex items-center justify-between shadow-md shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white/60 shrink-0">
+          <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-accent/50 ring-offset-1 ring-offset-primary shrink-0">
             <Image src="/logo.jpeg" alt="Logo" width={36} height={36} className="object-cover w-full h-full" />
           </div>
           <div>
-            <p className="font-bold text-sm leading-tight">Sabores del Perú</p>
-            <p className="text-amber-200 text-xs leading-tight">Panel de administración</p>
+            <p className="font-bold text-sm leading-tight font-heading">Sabores del Perú</p>
+            <p className="text-accent text-xs leading-tight">Panel de administración</p>
           </div>
         </div>
         <LogoutButton />
