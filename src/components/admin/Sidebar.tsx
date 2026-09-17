@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UtensilsCrossed, Tag, BookOpen } from 'lucide-react'
+import { UtensilsCrossed, Tag, BookOpen, Settings } from 'lucide-react'
 
 const links = [
   { href: '/admin', label: 'Plato del día', icon: UtensilsCrossed },
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },
   { href: '/admin/carta', label: 'Mi carta', icon: BookOpen },
+  { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ]
 
 export default function Sidebar() {
