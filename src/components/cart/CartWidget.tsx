@@ -105,93 +105,103 @@ export default function CartWidget({ whatsappNumber }: { whatsappNumber: string 
           ) : (
             <div className="flex-1 overflow-hidden flex flex-col min-h-0">
 
-              {/* Lista de items — scrollable */}
-              <div className="flex-1 overflow-y-auto px-5 py-4 space-y-1">
-                {items.map(item => (
-                  <div key={item.id} className="flex items-center gap-3 py-3 border-b border-border/40 last:border-0">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground leading-tight">{item.nombre}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {item.precio
-                          ? `$${item.precio.toLocaleString('es-AR')} c/u`
-                          : 'Consultar precio'}
-                      </p>
+              {/* Body scrollable: items + formulario */}
+              <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+
+                {/* Lista de items */}
+                <div className="space-y-1">
+                  {items.map(item => (
+                    <div key={item.id} className="flex items-center gap-2 py-3 border-b border-border/40 last:border-0">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground leading-tight truncate">{item.nombre}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.precio
+                            ? `$${Number(item.precio).toLocaleString('es-AR')} c/u`
+                            : 'Consultar precio'}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => updateCantidad(item.id, item.cantidad - 1)}
+                          className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                        >
+                          <Minus size={11} />
+                        </button>
+                        <span className="text-sm font-semibold w-5 text-center tabular-nums">{item.cantidad}</span>
+                        <button
+                          onClick={() => addItem(item)}
+                          className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                        >
+                          <Plus size={11} />
+                        </button>
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="w-7 h-7 ml-0.5 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+
+                      {item.precio && (
+                        <p className="text-sm font-semibold text-primary w-14 text-right shrink-0 tabular-nums">
+                          ${(Number(item.precio) * item.cantidad).toLocaleString('es-AR')}
+                        </p>
+                      )}
                     </div>
+                  ))}
+                </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        onClick={() => updateCantidad(item.id, item.cantidad - 1)}
-                        className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                      >
-                        <Minus size={11} />
-                      </button>
-                      <span className="text-sm font-semibold w-5 text-center tabular-nums">{item.cantidad}</span>
-                      <button
-                        onClick={() => addItem(item)}
-                        className="w-7 h-7 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                      >
-                        <Plus size={11} />
-                      </button>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="w-7 h-7 ml-1 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-
-                    {item.precio && (
-                      <p className="text-sm font-semibold text-primary w-16 text-right shrink-0 tabular-nums">
-                        ${(item.precio * item.cantidad).toLocaleString('es-AR')}
-                      </p>
-                    )}
-                  </div>
-                ))}
-
+                {/* Total */}
                 {total > 0 && (
-                  <div className="flex justify-between items-center pt-3 pb-1">
+                  <div className="flex justify-between items-center py-2 border-t border-border/60">
                     <p className="text-sm font-semibold text-foreground">Total estimado</p>
                     <p className="text-xl font-bold text-primary font-heading tabular-nums">
                       ${total.toLocaleString('es-AR')}
                     </p>
                   </div>
                 )}
+
+                {/* Formulario de checkout */}
+                <div className="space-y-3 pt-1">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="cart-nombre">Tu nombre</Label>
+                    <Input
+                      id="cart-nombre"
+                      value={nombre}
+                      onChange={e => setNombre(e.target.value)}
+                      placeholder="Ej: Juan García"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="cart-direccion">Dirección de entrega</Label>
+                    <Input
+                      id="cart-direccion"
+                      value={direccion}
+                      onChange={e => setDireccion(e.target.value)}
+                      placeholder="Ej: Calle 8 n° 123"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="cart-notas">
+                      Referencia <span className="text-muted-foreground font-normal">(opcional)</span>
+                    </Label>
+                    <Textarea
+                      id="cart-notas"
+                      value={notas}
+                      onChange={e => setNotas(e.target.value)}
+                      placeholder="Ej: puerta negra, timbre roto, piso 2..."
+                      rows={2}
+                      className="resize-none"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Checkout — fijo al fondo */}
-              <div className="border-t border-border px-5 py-5 space-y-4 bg-muted/40 shrink-0">
-                <div className="space-y-1.5">
-                  <Label htmlFor="cart-nombre">Tu nombre</Label>
-                  <Input
-                    id="cart-nombre"
-                    value={nombre}
-                    onChange={e => setNombre(e.target.value)}
-                    placeholder="Ej: Juan García"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="cart-direccion">Dirección de entrega</Label>
-                  <Input
-                    id="cart-direccion"
-                    value={direccion}
-                    onChange={e => setDireccion(e.target.value)}
-                    placeholder="Ej: Calle 8 n° 123"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="cart-notas">Referencia <span className="text-muted-foreground font-normal">(opcional)</span></Label>
-                  <Textarea
-                    id="cart-notas"
-                    value={notas}
-                    onChange={e => setNotas(e.target.value)}
-                    placeholder="Ej: puerta negra, timbre roto, piso 2..."
-                    rows={2}
-                    className="resize-none"
-                  />
-                </div>
-
+              {/* Botón — fijo al fondo */}
+              <div className="px-5 py-4 border-t border-border bg-muted/40 shrink-0">
                 <Button
                   onClick={handleEnviar}
                   disabled={!nombre.trim() || !direccion.trim()}

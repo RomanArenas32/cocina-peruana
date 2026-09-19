@@ -210,7 +210,7 @@ export default async function Home() {
                     )}
                     <div className="flex justify-end mt-4">
                       <AddToCartButton
-                        item={{ id: promo.id, nombre: promo.titulo, precio: null, tipo: 'promocion' }}
+                        item={{ id: promo.id, nombre: promo.titulo, precio: promo.precio ?? null, tipo: 'promocion' }}
                       />
                     </div>
                   </CardContent>

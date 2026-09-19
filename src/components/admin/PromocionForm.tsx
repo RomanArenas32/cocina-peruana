@@ -52,6 +52,7 @@ export default function PromocionForm() {
     const { error } = await supabase.from('promociones').insert({
       titulo: form.titulo,
       descripcion: form.descripcion || null,
+      precio: form.precio ? parseFloat(form.precio) : null,
       imagen_url,
       activa: true,
       fecha_expiracion: form.fechaExpiracion || null,
@@ -75,15 +76,28 @@ export default function PromocionForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="titulo">Título</Label>
-            <Input
-              id="titulo"
-              value={form.titulo}
-              onChange={(e) => setPromocion({ titulo: e.target.value })}
-              required
-              placeholder="Ej: 2x1 en ceviche los viernes"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="titulo">Título</Label>
+              <Input
+                id="titulo"
+                value={form.titulo}
+                onChange={(e) => setPromocion({ titulo: e.target.value })}
+                required
+                placeholder="Ej: Ají de Gallina"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="precio-promo">Precio ($) <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+              <Input
+                id="precio-promo"
+                type="number"
+                value={form.precio}
+                onChange={(e) => setPromocion({ precio: e.target.value })}
+                placeholder="Ej: 2500"
+                step="0.01"
+              />
+            </div>
           </div>
 
           <div className="space-y-1.5">

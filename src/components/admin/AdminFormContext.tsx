@@ -13,6 +13,7 @@ interface PlatoDiaState {
 interface PromocionState {
   titulo: string
   descripcion: string
+  precio: string
   fechaExpiracion: string
   imagen: File | null
   preview: string | null
@@ -37,6 +38,7 @@ const defaultPlatoDia: PlatoDiaState = {
 const defaultPromocion: PromocionState = {
   titulo: '',
   descripcion: '',
+  precio: '',
   fechaExpiracion: '',
   imagen: null,
   preview: null,
