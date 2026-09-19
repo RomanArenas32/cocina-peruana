@@ -171,7 +171,7 @@ export default async function Home() {
           <section className="animate-fade-in-up animation-delay-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-0.5 bg-accent" />
-              <h2 className="text-2xl font-bold text-primary font-heading">Promociones</h2>
+              <h2 className="text-2xl font-bold text-primary font-heading">Promociones del dia</h2>
             </div>
             <div className="space-y-4">
               {promociones.map((promo, i) => (
