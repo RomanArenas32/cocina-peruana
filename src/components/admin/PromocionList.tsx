@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Pause, Play, Trash2, CalendarPlus } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 interface Promocion {
   id: string
@@ -32,6 +33,8 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
   const router = useRouter()
   const [extendiendo, setExtendiendo] = useState<string | null>(null)
   const [nuevaFecha, setNuevaFecha] = useState('')
+  const [eliminando, setEliminando] = useState<Promocion | null>(null)
+  const [loadingEliminar, setLoadingEliminar] = useState(false)
 
   async function toggleActiva(id: string, activa: boolean) {
     const supabase = createClient()
@@ -44,14 +47,18 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
     router.refresh()
   }
 
-  async function eliminar(id: string) {
+  async function confirmarEliminar() {
+    if (!eliminando) return
+    setLoadingEliminar(true)
     const supabase = createClient()
-    const { error } = await supabase.from('promociones').delete().eq('id', id)
+    const { error } = await supabase.from('promociones').delete().eq('id', eliminando.id)
     if (error) {
       toast.error('Error al eliminar la promoción')
     } else {
       toast.success('Promoción eliminada')
     }
+    setLoadingEliminar(false)
+    setEliminando(null)
     router.refresh()
   }
 
@@ -78,7 +85,8 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
   }
 
   return (
-    <div className="space-y-3">
+    <>
+      <div className="space-y-3">
       {promociones.map((promo) => {
         const estado = estadoExpiracion(promo.fecha_expiracion)
 
@@ -144,7 +152,7 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
                     size="sm"
                     variant="outline"
                     className="gap-1.5 text-xs text-primary border-primary/20 hover:bg-primary/5"
-                    onClick={() => eliminar(promo.id)}
+                    onClick={() => setEliminando(promo)}
                   >
                     <Trash2 size={13} />
                     Eliminar
@@ -176,5 +184,17 @@ export default function PromocionList({ promociones }: { promociones: Promocion[
         )
       })}
     </div>
+
+      <ConfirmDialog
+        open={!!eliminando}
+        title={`¿Eliminar "${eliminando?.titulo}"?`}
+        description="Esta acción no se puede deshacer. La promoción dejará de mostrarse en la página."
+        confirmLabel="Sí, eliminar"
+        destructive
+        loading={loadingEliminar}
+        onConfirm={confirmarEliminar}
+        onCancel={() => setEliminando(null)}
+      />
+    </>
   )
 }

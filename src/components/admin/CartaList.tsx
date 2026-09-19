@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Trash2, UtensilsCrossed, Tag, Pencil, ImagePlus, Save, Search, X } from 'lucide-react'
 import type { OpcionGrupo } from '@/components/cart/CartProvider'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
@@ -58,6 +59,8 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
   }, [loadMore])
 
   const [editando, setEditando] = useState<Plato | null>(null)
+  const [eliminando, setEliminando] = useState<Plato | null>(null)
+  const [loadingEliminar, setLoadingEliminar] = useState(false)
   const [editNombre, setEditNombre] = useState('')
   const [editDescripcion, setEditDescripcion] = useState('')
   const [editPrecio, setEditPrecio] = useState('')
@@ -118,14 +121,18 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
     router.refresh()
   }
 
-  async function eliminar(id: string) {
+  async function confirmarEliminar() {
+    if (!eliminando) return
+    setLoadingEliminar(true)
     const supabase = createClient()
-    const { error } = await supabase.from('platos').delete().eq('id', id)
+    const { error } = await supabase.from('platos').delete().eq('id', eliminando.id)
     if (error) {
       toast.error('Error al eliminar el plato')
     } else {
       toast.success('Plato eliminado')
     }
+    setLoadingEliminar(false)
+    setEliminando(null)
     router.refresh()
   }
 
@@ -248,7 +255,7 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
                   size="sm"
                   variant="outline"
                   className="gap-1.5 text-xs text-red-600 border-red-200 hover:bg-red-50"
-                  onClick={() => eliminar(plato.id)}
+                  onClick={() => setEliminando(plato)}
                 >
                   <Trash2 size={13} />
                 </Button>
@@ -327,6 +334,17 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
           </div>
         </SheetContent>
       </Sheet>
+
+      <ConfirmDialog
+        open={!!eliminando}
+        title={`¿Eliminar "${eliminando?.nombre}"?`}
+        description="Esta acción no se puede deshacer."
+        confirmLabel="Sí, eliminar"
+        destructive
+        loading={loadingEliminar}
+        onConfirm={confirmarEliminar}
+        onCancel={() => setEliminando(null)}
+      />
     </>
   )
 }

@@ -11,6 +11,7 @@ import { ImagePlus, Save, Trash2 } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import OpcionesEditor from '@/components/admin/OpcionesEditor'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
 import Image from 'next/image'
 import { toast } from 'sonner'
@@ -28,6 +29,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   const { platoDia: form, setPlatoDia } = useAdminForm()
   const [loading, setLoading] = useState(false)
   const [eliminando, setEliminando] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   // Precargar el contexto con los datos de la DB la primera vez
   useEffect(() => {
@@ -189,16 +191,27 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
                 type="button"
                 variant="outline"
                 className="gap-2 text-primary border-primary/20 hover:bg-primary/5"
-                onClick={handleEliminar}
+                onClick={() => setConfirmOpen(true)}
                 disabled={eliminando}
               >
                 <Trash2 size={15} />
-                {eliminando ? 'Eliminando...' : 'Eliminar plato'}
+                Eliminar plato
               </Button>
             )}
           </div>
         </form>
       </CardContent>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="¿Eliminar plato del día?"
+        description="Esta acción no se puede deshacer. El plato dejará de mostrarse en la página principal."
+        confirmLabel="Sí, eliminar"
+        destructive
+        loading={eliminando}
+        onConfirm={async () => { await handleEliminar(); setConfirmOpen(false) }}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </Card>
   )
 }
