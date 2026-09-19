@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Trash2, UtensilsCrossed, Tag, Pencil, ImagePlus, Save, Search, X } from 'lucide-react'
+import type { OpcionGrupo } from '@/components/cart/CartProvider'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
@@ -23,6 +24,7 @@ interface Plato {
   descripcion: string | null
   precio: number | null
   imagen_url: string | null
+  opciones: OpcionGrupo[] | null
 }
 
 export default function CartaList({ platos }: { platos: Plato[] }) {
@@ -132,6 +134,7 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
       nombre: plato.nombre,
       descripcion: plato.descripcion ?? '',
       precio: plato.precio?.toString() ?? '',
+      opciones: plato.opciones ?? [],
       imagen: null,
       preview: plato.imagen_url,
     })
@@ -142,6 +145,7 @@ export default function CartaList({ platos }: { platos: Plato[] }) {
     setPromocion({
       titulo: plato.nombre,
       descripcion: plato.descripcion ?? '',
+      opciones: plato.opciones ?? [],
       imagen: null,
       preview: plato.imagen_url,
     })

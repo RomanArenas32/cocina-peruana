@@ -11,8 +11,10 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { ImagePlus, PlusCircle, Search, UtensilsCrossed, Tag, X } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
+import OpcionesEditor from '@/components/admin/OpcionesEditor'
 import Image from 'next/image'
 import { toast } from 'sonner'
+import type { OpcionGrupo } from '@/components/cart/CartProvider'
 
 interface Plato {
   id: string
@@ -20,6 +22,7 @@ interface Plato {
   descripcion: string | null
   precio: number | null
   imagen_url: string | null
+  opciones: OpcionGrupo[] | null
 }
 
 export default function CartaPlatoForm({ platos }: { platos: Plato[] }) {
@@ -30,6 +33,7 @@ export default function CartaPlatoForm({ platos }: { platos: Plato[] }) {
   const [nombre, setNombre] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [precio, setPrecio] = useState('')
+  const [opciones, setOpciones] = useState<OpcionGrupo[]>([])
   const [imagen, setImagen] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -96,6 +100,7 @@ export default function CartaPlatoForm({ platos }: { platos: Plato[] }) {
       nombre,
       descripcion: descripcion || null,
       precio: precio ? parseFloat(precio) : null,
+      opciones: opciones.length ? opciones : null,
       imagen_url,
     })
 
@@ -106,6 +111,7 @@ export default function CartaPlatoForm({ platos }: { platos: Plato[] }) {
       setNombre('')
       setDescripcion('')
       setPrecio('')
+      setOpciones([])
       setImagen(null)
       setPreview(null)
       setQuery('')
@@ -253,6 +259,12 @@ export default function CartaPlatoForm({ platos }: { platos: Plato[] }) {
               <div className="space-y-1.5">
                 <Label>Descripción</Label>
                 <RichTextEditor value={descripcion} onChange={setDescripcion} placeholder="Ingredientes, acompañamientos..." />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>Opciones / variantes <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <p className="text-xs text-muted-foreground">Ej: grupo &quot;Tipo&quot; con opciones California, Spicy Tuna...</p>
+                <OpcionesEditor value={opciones} onChange={setOpciones} />
               </div>
 
               <div className="space-y-1.5">

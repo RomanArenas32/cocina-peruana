@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ImagePlus, PlusCircle, CalendarDays } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
+import OpcionesEditor from '@/components/admin/OpcionesEditor'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import Image from 'next/image'
 import { toast } from 'sonner'
@@ -53,6 +54,7 @@ export default function PromocionForm() {
       titulo: form.titulo,
       descripcion: form.descripcion || null,
       precio: form.precio ? parseFloat(form.precio) : null,
+      opciones: form.opciones.length ? form.opciones : null,
       imagen_url,
       activa: true,
       fecha_expiracion: form.fechaExpiracion || null,
@@ -106,6 +108,15 @@ export default function PromocionForm() {
               value={form.descripcion}
               onChange={(v) => setPromocion({ descripcion: v })}
               placeholder="Detalle de la promoción..."
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Opciones / variantes <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+            <p className="text-xs text-muted-foreground">Ej: grupo &quot;Tipo&quot; con opciones California, Spicy Tuna...</p>
+            <OpcionesEditor
+              value={form.opciones}
+              onChange={(opciones) => setPromocion({ opciones })}
             />
           </div>
 

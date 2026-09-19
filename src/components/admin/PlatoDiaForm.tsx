@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ImagePlus, Save, Trash2 } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import RichTextEditor from '@/components/admin/RichTextEditor'
+import OpcionesEditor from '@/components/admin/OpcionesEditor'
 import { useAdminForm } from '@/components/admin/AdminFormContext'
 import Image from 'next/image'
 import { toast } from 'sonner'
@@ -94,6 +95,7 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
       nombre,
       descripcion: descripcion || null,
       precio: precio ? parseFloat(precio) : null,
+      opciones: form.opciones.length ? form.opciones : null,
       imagen_url,
     }
 
@@ -148,6 +150,15 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
               value={descripcion}
               onChange={(v) => setPlatoDia({ descripcion: v })}
               placeholder="Describí el plato: ingredientes, acompañamientos..."
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Opciones / variantes <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+            <p className="text-xs text-muted-foreground">Ej: grupo &quot;Tipo&quot; con opciones California, Spicy Tuna...</p>
+            <OpcionesEditor
+              value={form.opciones}
+              onChange={(opciones) => setPlatoDia({ opciones })}
             />
           </div>
 

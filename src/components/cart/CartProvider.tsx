@@ -2,11 +2,17 @@
 
 import { createContext, useContext, useState } from 'react'
 
+export interface OpcionGrupo {
+  nombre: string
+  opciones: string[]
+}
+
 export interface CartItem {
   id: string
   nombre: string
   precio: number | null
   tipo: 'plato_dia' | 'promocion'
+  opciones?: OpcionGrupo[]
 }
 
 interface CartItemWithQty extends CartItem {

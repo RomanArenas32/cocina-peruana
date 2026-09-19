@@ -167,7 +167,7 @@ export default async function Home() {
                     <p className="text-2xl font-bold text-primary font-heading">${platoDia.precio}</p>
                   )}
                   <AddToCartButton
-                    item={{ id: platoDia.id, nombre: platoDia.nombre, precio: platoDia.precio ?? null, tipo: 'plato_dia' }}
+                    item={{ id: platoDia.id, nombre: platoDia.nombre, precio: platoDia.precio ?? null, tipo: 'plato_dia', opciones: platoDia.opciones ?? undefined }}
                   />
                 </div>
               </CardContent>
@@ -210,7 +210,7 @@ export default async function Home() {
                     )}
                     <div className="flex justify-end mt-4">
                       <AddToCartButton
-                        item={{ id: promo.id, nombre: promo.titulo, precio: promo.precio ?? null, tipo: 'promocion' }}
+                        item={{ id: promo.id, nombre: promo.titulo, precio: promo.precio ?? null, tipo: 'promocion', opciones: promo.opciones ?? undefined }}
                       />
                     </div>
                   </CardContent>

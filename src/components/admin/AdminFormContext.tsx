@@ -1,11 +1,13 @@
 'use client'
 
 import { createContext, useContext, useState } from 'react'
+import type { OpcionGrupo } from '@/components/cart/CartProvider'
 
 interface PlatoDiaState {
   nombre: string
   descripcion: string
   precio: string
+  opciones: OpcionGrupo[]
   imagen: File | null
   preview: string | null
 }
@@ -14,6 +16,7 @@ interface PromocionState {
   titulo: string
   descripcion: string
   precio: string
+  opciones: OpcionGrupo[]
   fechaExpiracion: string
   imagen: File | null
   preview: string | null
@@ -31,6 +34,7 @@ const defaultPlatoDia: PlatoDiaState = {
   nombre: '',
   descripcion: '',
   precio: '',
+  opciones: [],
   imagen: null,
   preview: null,
 }
@@ -39,6 +43,7 @@ const defaultPromocion: PromocionState = {
   titulo: '',
   descripcion: '',
   precio: '',
+  opciones: [],
   fechaExpiracion: '',
   imagen: null,
   preview: null,
