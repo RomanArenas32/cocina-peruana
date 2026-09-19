@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,10 +28,21 @@ export default function PlatoDiaForm({ platoDia }: { platoDia: PlatoDia | null }
   const [loading, setLoading] = useState(false)
   const [eliminando, setEliminando] = useState(false)
 
-  // Inicializar con datos de la DB si el form está vacío
-  const nombre = form.nombre || platoDia?.nombre || ''
-  const descripcion = form.descripcion || platoDia?.descripcion || ''
-  const precio = form.precio || platoDia?.precio?.toString() || ''
+  // Precargar el contexto con los datos de la DB la primera vez
+  useEffect(() => {
+    if (platoDia && form.nombre === '' && form.precio === '') {
+      setPlatoDia({
+        nombre: platoDia.nombre,
+        descripcion: platoDia.descripcion ?? '',
+        precio: platoDia.precio?.toString() ?? '',
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const nombre = form.nombre
+  const descripcion = form.descripcion
+  const precio = form.precio
   const preview = form.preview ?? platoDia?.imagen_url ?? null
 
   async function handleEliminar() {
