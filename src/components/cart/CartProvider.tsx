@@ -1,6 +1,8 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+
+const STORAGE_KEY = 'carrito'
 
 export interface OpcionGrupo {
   nombre: string
@@ -32,7 +34,21 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItemWithQty[]>([])
+  const [items, setItems] = useState<CartItemWithQty[]>(() => {
+    if (typeof window === 'undefined') return []
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+    } catch {}
+  }, [items])
 
   function addItem(item: CartItem) {
     setItems(prev => {
