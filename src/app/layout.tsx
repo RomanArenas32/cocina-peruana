@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/components/cart/CartProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
   variable: "--font-sans",
@@ -23,7 +25,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${dmSans.variable} ${playfair.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        <CartProvider>{children}</CartProvider>
+        <Toaster richColors position="top-right" />
+      </body>
     </html>
   );
 }
