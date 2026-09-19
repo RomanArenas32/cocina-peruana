@@ -124,6 +124,15 @@ export default async function Home() {
       {/* Franja decorativa */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
 
+      {/* Banner de horario */}
+      {config?.horarios && (
+        <div className="bg-accent/12 border-y border-accent/25 px-4 py-3.5 text-center">
+          <p className="text-sm font-semibold text-primary leading-snug">
+            🕐 {config.horarios}
+          </p>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto px-4 py-10 space-y-12">
 
         {/* Plato del dia */}
@@ -237,16 +246,6 @@ export default async function Home() {
               <p className="text-primary-foreground/50 text-xs tracking-[0.2em] uppercase mt-0.5">Azul · Buenos Aires</p>
             </div>
           </div>
-
-          {/* Horarios */}
-          {config?.horarios && (
-            <div className="text-sm text-primary-foreground/65 space-y-1">
-              <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">Horarios</p>
-              {config.horarios.split('\n').filter(Boolean).map((linea: string, i: number) => (
-                <p key={i}>{linea}</p>
-              ))}
-            </div>
-          )}
 
           {/* Dirección */}
           {config?.direccion && (
